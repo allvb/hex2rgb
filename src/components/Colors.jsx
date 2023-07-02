@@ -6,12 +6,22 @@ function Colors() {
   const [colorRGB, setRGB] = useState('');
   const [colorBG, setBG] = useState('#ffffff');
 
+  function isHexadecimal(colorHex) { // проверка на 16-ричное число
+    const arr = [...colorHex];
+    for (let char of arr) {
+      if ((char < '0' || char > '9')
+      && (char < 'a' || char > 'f')) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   function colorToRGB(colorHex) {
-    const number = parseInt(colorHex.substring(1), 16);
-    const r = (number >> 16) & 255;
-    const g = (number >> 8) & 255;
-    const b = number & 255;
-  
+    const r = parseInt(colorHex.substring(1, 3), 16);
+    const g = parseInt(colorHex.substring(3, 5), 16);
+    const b = parseInt(colorHex.substring(5), 16);
+
     return 'rgb( ' + r + ', ' + g + ', ' + b + ' )';
   }
 
@@ -20,9 +30,9 @@ function Colors() {
       setHex((prev) => (prev = e.target.value));
     }
     if (e.target.value.length === 7) {
-      if (!isNaN(colorHex.substring(1))) {
-        setRGB((prev) => prev = colorToRGB(colorHex));
-        setBG((prev) => prev = colorHex);
+      if (isHexadecimal(e.target.value.substring(1))) {
+        setRGB((prev) => prev = colorToRGB(e.target.value));
+        setBG((prev) => prev = e.target.value);
       } else {
         setRGB((prev) => prev = 'Ошибка');
         setBG((prev) => prev = '#a52019');
